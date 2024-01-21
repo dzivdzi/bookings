@@ -20,5 +20,9 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Use(SessionLoad)
 	mux.Get("/", handlers.Repo.Home)
 	mux.Get("/about", handlers.Repo.About)
+	// fileServer -> A place to go get static files from
+	fileServer := http.FileServer(http.Dir("./static/"))
+	// Handle -> StripPrefix Takes the URL go gets and modifies it to something GO knows how to handle, strip the stat and use the fileserver var
+	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
 	return mux
 }
